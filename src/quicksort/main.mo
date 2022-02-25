@@ -1,11 +1,62 @@
+import Array "mo:base/Array";
 import Int "mo:base/Int";
-import Quicksort "Quicksort";
+import Order "mo:base/Order";
+//import Quicksort "Quicksort";
 
 actor Main {
 
-  // Sort an array of integers.
-  public query func sort(xs : [Int]) : async [Int] {
-    return Quicksort.sortBy(xs, Int.compare);
-  };
+    type Order = Order.Order;
+
+    // Sort the elements of an array using the given comparison function.
+    func sortBy<X>(xs : [X], f : (X, X) -> Order) : [X] {
+        let n = xs.size();
+        if (n < 2) {
+            xs;
+        } else {
+            let result = Array.thaw<X>(xs); //transform xs to mutable array
+            sortByHelper<X>(result, 0, n - 1, f);
+            Array.freeze<X>(result); //transform result to immutable array
+        };
+    };
+
+    func sortByHelper<X>(
+        xs : [var X],
+        l : Int,
+        r : Int,
+        f : (X, X) -> Order,
+    ) {
+        if (l < r) {
+            var i = l;
+            var j = r;
+            var swap  = xs[0];
+            let pivot = xs[Int.abs(l + r) / 2];
+            while (i <= j) {
+                while (Order.isLess(f(xs[Int.abs(i)], pivot))) {
+                    i := i + 1;
+                };
+                    while (Order.isGreater(f(xs[Int.abs(j)], pivot))) {
+                    j := j - 1;
+                };
+                if (i <= j) {
+                    swap := xs[Int.abs(i)];
+                    xs[Int.abs(i)] := xs[Int.abs(j)];
+                    xs[Int.abs(j)] := swap;
+                    i := i + 1;
+                    j := j - 1;
+                };
+            };
+            if (l < j) {
+                sortByHelper<X>(xs, l, j, f);
+            };
+            if (i < r) {
+                sortByHelper<X>(xs, i, r, f);
+            };
+        };
+    };
   
+  // Sort an array of integers.
+  public func qsort(xs : [Int]) : async [Int] {
+    sortBy(xs, Int.compare);
+  };
+
 };
