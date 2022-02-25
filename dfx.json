@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "dfx": "0.8.4",
+  "canisters": {
+    "quicksort": {
+      "type": "motoko",
+      "main": "src/quicksort/main.mo"
+    },
+    "quicksort_assets": {
+      "type": "assets",
+      "source": [
+        "src/quicksort_assets/assets"
+      ],
+      "dependencies": [
+        "quicksort"
+      ]
+    }
+  },
+  "defaults": {
+    "build": {
+      "packtool": "",
+      "args": ""
+    }
+  },
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
+    }
+  }
+}
