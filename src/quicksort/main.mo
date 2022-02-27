@@ -1,12 +1,8 @@
 import Array "mo:base/Array";
 import Int "mo:base/Int";
-import Order "mo:base/Order";
 import Debug "mo:base/Debug";
 
 actor Main {
-
-  type Order = Order.Order;
-
   // Sort the elements of an array using the given comparison function.
   func Quicksort(xs : [Int]) : [Int] {
       let n = xs.size();
